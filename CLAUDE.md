@@ -182,6 +182,8 @@ Si un archivo no tiene ninguna decisión de ese tipo, no lleva comentarios. Es c
 - Un commit por tarea. Cada commit deja el repositorio funcionando.
 - Ramas por funcionalidad. Sin squash al fusionar.
 - Nunca hagas `push` sin que te lo pidan. Nunca reescribas historial.
+- `.claude/` y `docs/` están en `.gitignore` y no se versionan. No los añadas
+con `git add -f` ni crees documentación equivalente en otro sitio.
 
 ### Mensajes
 
