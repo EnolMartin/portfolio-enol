@@ -28,13 +28,6 @@
      Si la trama sube de opacidad, hay que revisar --fosforo-tenue antes que
      ningún otro valor. */
 
-  /* Sin color, lo que distingue un estado es la inversión de vídeo, los
-     corchetes, el cursor de bloque o el subrayado: todos ellos se dibujan
-     con --fosforo, así que solo la inversión necesita tokens propios.
-     --fosforo-apagado marca contenido inerte, nunca un estado por sí solo. */
-  --estado-inverso-fondo: var(--fosforo);
-  --estado-inverso-texto: var(--gris-tubo);
-
   /* --fuente-* las inyecta next/font en el <html> y solo traen la familia y
      su fallback métrico; la pila de respaldo real se decide aquí. */
   --tipo-cuerpo: var(--fuente-cuerpo), ui-monospace, SFMono-Regular, Menlo,
@@ -45,4 +38,65 @@
   /* El suelo no baja de 15px: por debajo de eso la trama de scanlines se come
      los trazos finos y el texto dentro del tubo deja de leerse. */
   --tamano-cuerpo: clamp(0.9375rem, 0.9rem + 0.25vw, 1.0625rem);
+
+  /* La escala va en rem y no en ch pese a que el cuerpo sea monoespaciado:
+     ch depende de la fuente resuelta, así que mediría bien dentro del tubo y
+     mentiría en cualquier titular, y además cambia de valor cuando entra la
+     fuente real y movería la maqueta entera. ch se reserva para lo que de
+     verdad tiene que caer sobre la retícula de caracteres, que son detalles
+     locales y siempre dentro de texto en --tipo-cuerpo. */
+  --espacio-corto: 0.5rem;
+  --espacio-medio: 1rem;
+  --espacio-largo: 2rem;
+
+  /* La pantalla pasa de apaisada a vertical, así que el margen interior del
+     cristal no puede ser fijo. Va holgado porque la viñeta y la curvatura
+     oscurecen los bordes: el texto que se acerca ahí pierde contraste. */
+  --espacio-tubo: clamp(1.25rem, 4vw, 2.5rem);
+
+  /* En monoespaciada esto son 68 caracteres exactos, no una aproximación. */
+  --medida-texto: 68ch;
+
+  /* Sin color, lo que distingue un estado es la inversión de vídeo, los
+     corchetes, el cursor de bloque o el subrayado. Los cuatro se dibujan con
+     --fosforo; lo que cambia entre ellos es la dimensión.
+     --fosforo-apagado marca contenido inerte, nunca un estado por sí solo. */
+  --estado-inverso-fondo: var(--fosforo);
+  --estado-inverso-texto: var(--gris-tubo);
+
+  /* El aire vertical va en em y muy corto porque el relleno vertical de un
+     inline no empuja las líneas vecinas, las pisa. El horizontal en ch deja
+     el bloque invertido cuadrado con la retícula de caracteres. */
+  --estado-inverso-aire: 0.12em 0.5ch;
+
+  /* Una celda exacta: el cursor se dibuja en CSS porque █ (U+2588) no entra
+     en el subset latin y saldría como tofu. */
+  --estado-cursor-ancho: 1ch;
+  --estado-cursor-alto: 1.15em;
+
+  /* Absoluto y no en em: el paso de las scanlines también es absoluto, y un
+     subrayado de un píxel puede caer entero dentro de una línea oscura y
+     desaparecer. Tres píxeles sobreviven a la trama en cualquier tamaño. */
+  --estado-subrayado-grosor: 0.1875rem;
+  --estado-subrayado-aire: 0.25em;
+
+  /* El bloque de contraste de más arriba da por ciertos exactamente estos dos
+     valores: media línea oscura por periodo, al 35%. Si se tocan, los ratios
+     anotados dejan de valer y hay que recalcularlos. */
+  --trama-paso: 3px;
+  --trama-opacidad: 0.35;
+  --trama-linea: rgb(0 0 0 / var(--trama-opacidad));
+
+  /* La densidad del grano va cocida en el SVG de crt.css porque var() no entra
+     dentro de una url(). Lo que se ajusta desde aquí es cuánto se ve y cada
+     cuánto se repite, que es lo que hace falta para atenuarlo. */
+  --grano-opacidad: 0.045;
+  --grano-escala: 160px;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --trama-opacidad: 0.2;
+    --grano-opacidad: 0.02;
+  }
 }

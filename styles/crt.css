@@ -1,0 +1,40 @@
+.crt-superficie {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--gris-tubo);
+}
+
+.crt-superficie::before,
+.crt-superficie::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* El periodo se reparte mitad línea oscura, mitad transparente. No hay
+   medidas del lienzo en la fórmula, así que la trama sale igual en apaisado
+   que en vertical y no hay nada que recalcular al girar el aparato. */
+.crt-superficie::before {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--trama-linea) 0,
+    var(--trama-linea) calc(var(--trama-paso) / 2),
+    transparent calc(var(--trama-paso) / 2),
+    transparent var(--trama-paso)
+  );
+}
+
+/* Ruido procedural en un SVG de 300 bytes en vez de un PNG en base64, que se
+   comería varios kilobytes del presupuesto de CSS para conseguir lo mismo.
+   El filtro lo rasteriza el navegador una vez y luego solo repite el mosaico;
+   no es un filter animado, es una textura. stitchTiles evita la costura entre
+   repeticiones y el feColorMatrix quita el color del ruido, que sobre gris se
+   vería como motas de colores. */
+.crt-superficie::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: var(--grano-escala) var(--grano-escala);
+  opacity: var(--grano-opacidad);
+}

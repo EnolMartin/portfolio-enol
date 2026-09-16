@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
+@import "../styles/crt.css";
 
 /* Nombradas por su papel, no por su forma: sans/mono mentiría, porque aquí la
    monoespaciada es el cuerpo y no un caso especial. */
