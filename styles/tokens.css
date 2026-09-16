@@ -34,4 +34,15 @@
      --fosforo-apagado marca contenido inerte, nunca un estado por sí solo. */
   --estado-inverso-fondo: var(--fosforo);
   --estado-inverso-texto: var(--gris-tubo);
+
+  /* --fuente-* las inyecta next/font en el <html> y solo traen la familia y
+     su fallback métrico; la pila de respaldo real se decide aquí. */
+  --tipo-cuerpo: var(--fuente-cuerpo), ui-monospace, SFMono-Regular, Menlo,
+    Consolas, monospace;
+  --tipo-titular: var(--fuente-titular), system-ui, "Helvetica Neue", Arial,
+    sans-serif;
+
+  /* El suelo no baja de 15px: por debajo de eso la trama de scanlines se come
+     los trazos finos y el texto dentro del tubo deja de leerse. */
+  --tamano-cuerpo: clamp(0.9375rem, 0.9rem + 0.25vw, 1.0625rem);
 }
