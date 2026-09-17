@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getDictionary } from "@/lib/dictionary";
 import {
   isLocale,
   languageAlternates,
@@ -27,9 +28,11 @@ export async function generateMetadata({
   const section = sectionForSlug(locale, slug);
   if (!section) notFound();
 
+  const { secciones } = await getDictionary(locale);
+
   return {
-    title: `[[FALTA: título de ${section} en ${locale}]]`,
-    description: `[[FALTA: descripción de ${section} en ${locale}]]`,
+    title: secciones[section].titulo,
+    description: secciones[section].descripcion,
     alternates: {
       canonical: pathFor(locale, section),
       languages: languageAlternates(section),
@@ -37,8 +40,8 @@ export async function generateMetadata({
   };
 }
 
-// TODO: cada sección monta su componente de components/sections en cuanto
-// existan los diccionarios. Hasta entonces, marcadores a la vista.
+// TODO: cada sección monta su componente de components/sections en cuanto haya
+// maquetación; el encabezado es lo único que comparten las cuatro.
 export default async function PaginaDeSeccion({
   params,
 }: {
@@ -52,9 +55,11 @@ export default async function PaginaDeSeccion({
   const section = sectionForSlug(locale, slug);
   if (!section) notFound();
 
+  const { secciones } = await getDictionary(locale);
+
   return (
     <main>
-      <h1>[[FALTA: encabezado de {section}]]</h1>
+      <h1>{secciones[section].encabezado}</h1>
     </main>
   );
 }

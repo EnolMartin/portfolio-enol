@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getDictionary } from "@/lib/dictionary";
 import {
   isLocale,
   languageAlternates,
@@ -21,9 +22,11 @@ export async function generateMetadata({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
+  const { portada } = await getDictionary(locale);
+
   return {
-    title: `[[FALTA: título de la portada en ${locale}]]`,
-    description: `[[FALTA: descripción de la portada en ${locale}]]`,
+    title: portada.titulo,
+    description: portada.descripcion,
     alternates: {
       canonical: pathFor(locale),
       languages: languageAlternates(),
@@ -31,8 +34,6 @@ export async function generateMetadata({
   };
 }
 
-// TODO: portada de verdad —nombre, rol e intro— cuando existan los
-// diccionarios. Los marcadores se quedan a la vista a propósito.
 export default async function Portada({
   params,
 }: {
@@ -41,16 +42,19 @@ export default async function Portada({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
+  const textos = await getDictionary(locale);
+
   return (
     <main>
-      <h1>[[FALTA: nombre y rol]]</h1>
-      <p>[[FALTA: párrafo de entrada]]</p>
+      <h1>{textos.portada.nombre}</h1>
+      <p>{textos.portada.rol}</p>
+      <p>{textos.portada.entrada}</p>
       <nav>
         <ul>
           {sections.map((section) => (
             <li key={section}>
               <Link href={pathFor(locale, section)}>
-                [[FALTA: nombre de la sección {section}]]
+                {textos.secciones[section].nombre}
               </Link>
             </li>
           ))}
