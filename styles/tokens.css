@@ -16,21 +16,28 @@
      ámbar ni verde: eso convertiría el aparato en un terminal de texto. */
   --fosforo: #e8ece9;
   --fosforo-tenue: #b4bcb8;
+  /* No lleva texto, y no por contraste: lo pasa. La trama modula un mismo
+     color 1.64x según la fila caiga en banda clara u oscura, y este gris se
+     separa de --fosforo-tenue solo 1.29x, así que la distinción queda por
+     debajo del ruido de la superficie sobre la que se pinta y en pantalla
+     los dos se leen como el mismo gris. El contenido inerte se marca por
+     estructura -corchetes, sangría, una regla-; aquí quedan los separadores
+     y los trazos no textuales. */
   --fosforo-apagado: #9ca6a1;
   --fosforo-halo: rgb(224 240 232 / 0.22);
 
   /* Contraste sobre --gris-tubo, en limpio y con la trama y el grano encima.
      La banda de scanline cubre la fila entera, glifo y fondo por igual: no
      existe el caso de oscurecer solo el texto, así que el peor caso es la
-     fila oscura completa. El grano se lleva otro 3-4% y también cuenta.
-       --fosforo          15.8:1  ->  9.4:1
+     fila oscura completa. El grano se lleva otro 4-5% y también cuenta.
+       --fosforo          15.8:1  ->  9.2:1
        --fosforo-tenue     9.7:1  ->  5.9:1
        --fosforo-apagado   7.5:1  ->  4.7:1
-     Estas cifras están calculadas, no medidas en pantalla. Las anteriores
-     también lo estaban y la medición en píxeles las desmintió por un factor
-     de 1.5, así que al tocar la trama toca volver a medir, no recalcular de
-     memoria. El que va justo es --fosforo-apagado: 4.7 sobre un mínimo
-     de 4.5. */
+     La segunda columna está medida en píxeles a DPR 2, no calculada. Los dos
+     primeros son los únicos pares de texto; el apagado figura solo como
+     referencia. Al tocar la trama hay que volver a medir y no extrapolar: el
+     peso del grano cambia con la opacidad y con el color, y darlo por
+     constante ya publicó aquí una tabla que la medición desmintió. */
 
   /* --fuente-* las inyecta next/font en el <html>. El cuerpo va sin fallback
      métrico automático a propósito: ese ajuste se calcula contra Arial, que
@@ -68,7 +75,7 @@
   /* Sin color, lo que distingue un estado es la inversión de vídeo, los
      corchetes, el cursor de bloque o el subrayado. Los cuatro se dibujan con
      --fosforo; lo que cambia entre ellos es la dimensión.
-     --fosforo-apagado marca contenido inerte, nunca un estado por sí solo. */
+     --fosforo-apagado no entra en esta lista: no lleva texto. */
   --estado-inverso-fondo: var(--fosforo);
   --estado-inverso-texto: var(--gris-tubo);
 
