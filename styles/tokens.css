@@ -11,6 +11,19 @@
   --gris-tubo-apagado: #171a18;
   --gris-tubo: #0f1211;
 
+  /* La carcasa es un sólido, no un plano: sin un modelo de luz, el bisel, los
+     tornillos y el casquillo del LED se quedan en siluetas planas. Van en alfa
+     y no como grises opacos porque las mismas capas se apilan sobre
+     --gris-carcasa y sobre --gris-bisel, que no son el mismo gris: en opaco
+     habría que duplicar cada valor por fondo.
+     La luz cae desde arriba, así que el realce va en el filo inferior de un
+     hueco y en el superior de un saliente. Invertirlo hunde lo que sobresale.
+     La mancha no es la sombra a menos alfa: la oclusión tiene borde duro y la
+     mancha no, y compartiendo token siempre quedaba mal una de las dos. */
+  --relieve-luz: rgb(255 255 255 / 0.06);
+  --relieve-sombra: rgb(0 0 0 / 0.5);
+  --relieve-mancha: rgb(0 0 0 / 0.13);
+
   /* El fósforo no llega a blanco puro: #fff delata pantalla moderna.
      El carácter es P4, el blanco-gris de una tele en blanco y negro, no
      ámbar ni verde: eso convertiría el aparato en un terminal de texto. */

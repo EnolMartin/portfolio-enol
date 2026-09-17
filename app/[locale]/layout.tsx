@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo_Black, IBM_Plex_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
+import { Carcasa } from "@/components/device/Carcasa";
 import { getDictionary } from "@/lib/dictionary";
 import { isLocale, sitio } from "@/lib/routes";
 import "../globals.css";
@@ -69,7 +70,9 @@ export default async function LayoutRaiz({
       lang={locale}
       className={`${cuerpo.variable} ${titular.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="h-full flex flex-col">
+        <Carcasa>{children}</Carcasa>
+      </body>
     </html>
   );
 }

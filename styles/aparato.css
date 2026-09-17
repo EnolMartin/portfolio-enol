@@ -1,0 +1,329 @@
+/* El aparato se mide contra la ventana, así que la cadena de alturas tiene que
+   ser definida hasta aquí: html y body en alto completo y este encuadre como
+   único hijo que crece. Con un min-height en medio, el porcentaje se vuelve
+   auto, la proporción sale del ancho y el aparato acaba más alto que la
+   pantalla. */
+.aparato-encuadre {
+  flex: 1;
+  min-block-size: 0;
+  display: grid;
+  /* La retícula va a medida exacta y no en auto: una fila auto crece con lo
+     que haya dentro del tubo, el aparato se estira detrás de ella y acaba
+     saliéndose de la ventana en cuanto el texto es largo. */
+  grid-template: 100% / 100%;
+  place-items: center;
+  /* Lo que se ve alrededor es la habitación asomando. En vertical se reduce
+     casi a nada. */
+  padding: clamp(0.75rem, 3.5vmin, 3rem);
+}
+
+/* El grosor del bisel es la medida de la que cuelga todo lo demás: tornillos,
+   rejilla y LED se dimensionan y se colocan a partir de él, así que adelgazar
+   el bisel en vertical reacomoda la carcasa entera sin tocar una posición.
+   El borde inferior mide 2.8 veces los otros tres, y la asimetría es el motivo
+   entero: un marco de grosor uniforme se lee como monitor, y lo que tiene una
+   barbilla es un aparato que se coge con las manos. En 16:10 el cuerpo es bajo
+   y la barbilla necesita ser generosa para leerse como tal.
+   Aquí hubo escrito que por encima de 2 la banda pesaba demasiado. Era cierto
+   mientras la carcasa era un tono plano: ahora cada cara tiene el suyo, la
+   banda inferior se lee como un plano y no como un vacío, y aguanta de sobra
+   este ancho. */
+.aparato {
+  --bisel: clamp(1rem, 3.2vmin, 2.75rem);
+  --bisel-inferior: calc(var(--bisel) * 2.8);
+  --radio: clamp(0.625rem, 1.8vmin, 1.375rem);
+  --tornillo: clamp(0.5rem, calc(var(--bisel) * 0.62), 1.375rem);
+  /* Una sola cota, igual en los cuatro y en los dos ejes: los tornillos van en
+     las esquinas y a la misma profundidad, también los de abajo, que por eso
+     quedan por debajo de la línea del LED y la rejilla.
+     Va por encima de medio bisel -no centrados en la banda- porque centrados
+     se leen colgando del canto exterior. El techo es duro: el tornillo mide
+     0.62 del bisel, así que con la cota en 0.69 tocaría el cristal. */
+  --tornillo-cota: calc(var(--bisel) * 0.58);
+  --rejilla-paso: clamp(3px, calc(var(--bisel-inferior) * 0.1), 7px);
+  /* El LED vive en la banda superior, que mide --bisel, así que se dimensiona
+     contra ella y no contra la barbilla. Lo que manda no es ninguna pieza
+     vecina sino el ancho de la banda: con el casquillo, la cápsula ocupa 1.32
+     veces este valor, así que a 0.48 son dos tercios de banda y le queda un
+     sexto de aire por arriba y otro por abajo. Probado a 0.58: ocupaba tres
+     cuartos y la pieza se leía metida a presión, no apoyada. Por encima de 0.7
+     se sale del bisel. */
+  --led: clamp(0.375rem, calc(var(--bisel) * 0.48), 1.125rem);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radio);
+  /* El bisel tiene cuatro caras y la luz viene de arriba y un poco de la
+     izquierda, así que ninguna refleja igual: la de arriba se vuelve hacia la
+     luz, la de abajo le da la espalda y las laterales se quedan en medio. Cada
+     cara es un degradado confinado a su banda que se apaga al llegar al
+     cristal, así que el tono es más fuerte en el canto -donde el plano gira- y
+     se funde hacia dentro. Probado antes con un cónico desde el centro: los
+     ingletes salen radiales y cruzan la banda inferior en diagonal, porque un
+     inglete de verdad solo pasa por el centro si las cuatro bandas miden lo
+     mismo, y aquí la de abajo mide casi el triple.
+     Sin esto el bisel es un rectángulo de un solo tono y la pieza no tiene
+     volumen por ningún lado. */
+  background-color: var(--gris-carcasa);
+  background-image:
+    linear-gradient(to bottom, var(--gris-carcasa-filo), transparent),
+    linear-gradient(to top, var(--gris-bisel), transparent),
+    linear-gradient(to right, var(--relieve-luz), transparent),
+    linear-gradient(to left, var(--relieve-mancha), transparent);
+  background-size:
+    100% var(--bisel),
+    100% var(--bisel-inferior),
+    var(--bisel) 100%,
+    var(--bisel) 100%;
+  background-position: top, bottom, left, right;
+  background-repeat: no-repeat;
+  box-shadow:
+    inset 0 0.0625rem 0 var(--relieve-luz),
+    inset 0 -0.0625rem 0 var(--relieve-sombra),
+    0 1.25rem 2.5rem var(--gris-vineta);
+}
+
+/* Solo se fija el eje que limita y el otro sale de la proporción. Dando los
+   dos a la vez -alto al 100% y ancho al 100% como máximo- la proporción se
+   ignora, porque solo interviene cuando uno de los dos ejes es automático, y
+   el aparato se estira hasta llenar la ventana. Los máximos tampoco valen:
+   no se transfieren de un eje al otro contra una medida ya definida. */
+@media (min-aspect-ratio: 16 / 10) {
+  .aparato {
+    block-size: 100%;
+  }
+}
+
+@media (max-aspect-ratio: 16 / 10) {
+  .aparato {
+    inline-size: 100%;
+  }
+}
+
+/* La luz de la habitación no cae plana sobre los planos grandes. Son manchas
+   anchas y sin borde, no suciedad: el estado acordado es "casi nuevo" y
+   ensuciar un gris se lleva por delante la lectura del texto.
+   Aquí hubo un mosaico de ruido y está retirado: daba variación, pero uniforme
+   y por toda la pieza, y una rugosidad igual en las cuatro bandas borra
+   justamente los planos que las distinguen. El volumen lo tiene que dar la
+   luz, no el material. */
+.aparato::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image:
+    radial-gradient(70% 50% at 14% 4%, var(--relieve-luz), transparent 72%),
+    radial-gradient(45% 30% at 88% 10%, var(--relieve-mancha), transparent 70%),
+    radial-gradient(38% 60% at 3% 74%, var(--relieve-luz), transparent 68%),
+    radial-gradient(60% 45% at 74% 98%, var(--relieve-mancha), transparent 72%);
+}
+
+/* El bisel es el margen del cristal y no el relleno de la carcasa: con
+   relleno, el bloque contenedor de los adornos se encoge hasta el hueco del
+   tubo y las cotas de tornillos, rejilla y LED habría que escribirlas en
+   negativo contando desde dentro. */
+.aparato-pantalla {
+  flex: 1;
+  min-block-size: 0;
+  margin: var(--bisel) var(--bisel) var(--bisel-inferior);
+  padding: var(--espacio-tubo);
+  border-radius: calc(var(--radio) / 2.5);
+  /* El cristal recorta lo que se salga; el scroll del contenido llega en su
+     propia tarea y se monta dentro de este hueco, no en la página. */
+  overflow: clip;
+  /* De fuera a dentro: el filo iluminado del labio inferior del hueco, el
+     canto de la junta y la pared de arriba proyectando sobre el tubo. */
+  box-shadow:
+    0 0.125rem 0.1875rem -0.0625rem var(--relieve-luz),
+    0 0 0 0.09375rem var(--gris-vineta),
+    inset 0 0.375rem 0.75rem -0.25rem var(--relieve-sombra);
+}
+
+.aparato-tornillos {
+  position: absolute;
+  inset: 0;
+}
+
+.aparato-tornillos span {
+  position: absolute;
+  inline-size: var(--tornillo);
+  block-size: var(--tornillo);
+  /* El margen negativo centra el tornillo sobre su punto de anclaje valga el
+     lado que valga; con translate habría que cambiar el signo en las dos
+     esquinas derechas. */
+  margin: calc(var(--tornillo) / -2);
+  border-radius: 50%;
+  background-image: linear-gradient(
+    145deg,
+    var(--gris-carcasa-filo),
+    var(--gris-bisel) 72%
+  );
+  /* El avellanado primero, o el tornillo flota sobre la carcasa en vez de
+     estar hundido en ella; el realce va debajo porque la luz viene de arriba
+     y es el labio de abajo del hueco el que la recibe. */
+  box-shadow:
+    0 0 0 1px var(--relieve-sombra),
+    0 0.125rem 0.125rem -0.0625rem var(--relieve-luz),
+    inset 0 0 0.0625rem var(--gris-vineta);
+}
+
+/* La ranura de cada tornillo va en un ángulo distinto. Es el detalle que más
+   barato compra credibilidad: cuatro ranuras paralelas se leen como un icono
+   repetido, y nadie atornilla cuatro tornillos hasta dejarlos alineados. */
+.aparato-tornillos span::after {
+  content: "";
+  position: absolute;
+  inset-inline: 14%;
+  inset-block-start: 50%;
+  block-size: max(1px, calc(var(--tornillo) * 0.16));
+  transform: translateY(-50%) rotate(var(--giro));
+  background-image: linear-gradient(
+    to bottom,
+    var(--gris-vineta) 0 60%,
+    var(--gris-carcasa-filo) 60%
+  );
+}
+
+.aparato-tornillos span:nth-child(1) {
+  --giro: 24deg;
+  inset-block-start: var(--tornillo-cota);
+  inset-inline-start: var(--tornillo-cota);
+}
+
+.aparato-tornillos span:nth-child(2) {
+  --giro: -41deg;
+  inset-block-start: var(--tornillo-cota);
+  inset-inline-end: var(--tornillo-cota);
+}
+
+.aparato-tornillos span:nth-child(3) {
+  --giro: 68deg;
+  inset-block-end: var(--tornillo-cota);
+  inset-inline-start: var(--tornillo-cota);
+}
+
+.aparato-tornillos span:nth-child(4) {
+  --giro: -9deg;
+  inset-block-end: var(--tornillo-cota);
+  inset-inline-end: var(--tornillo-cota);
+}
+
+/* Cinco filas de agujeros al tresbolillo, no una retícula: dos capas con el
+   mismo paso desplazadas media celda. El paso sale del bisel, así que el
+   número de filas se mantiene al cambiar de tamaño y no aparecen filas
+   cortadas por la mitad. Las dos capas de abajo son el mismo agujero un píxel
+   más abajo y en luz: es el canto taladrado, la diferencia entre un agujero y
+   un punto pintado. */
+.aparato-rejilla {
+  --agujero: calc(var(--rejilla-paso) * 0.29);
+  position: absolute;
+  inset-block-end: calc(var(--bisel-inferior) / 2);
+  inset-inline-end: calc(var(--bisel) * 1.8);
+  margin-block-end: calc(var(--rejilla-paso) * -2.5);
+  inline-size: calc(var(--rejilla-paso) * 19);
+  block-size: calc(var(--rejilla-paso) * 5);
+  background-image:
+    radial-gradient(
+      circle var(--agujero) at 50% 25%,
+      var(--gris-vineta) 0 68%,
+      transparent 72%
+    ),
+    radial-gradient(
+      circle var(--agujero) at 50% 75%,
+      var(--gris-vineta) 0 68%,
+      transparent 72%
+    ),
+    radial-gradient(
+      circle var(--agujero) at 50% 25%,
+      var(--relieve-luz) 0 70%,
+      transparent 74%
+    ),
+    radial-gradient(
+      circle var(--agujero) at 50% 75%,
+      var(--relieve-luz) 0 70%,
+      transparent 74%
+    );
+  background-size: var(--rejilla-paso) calc(var(--rejilla-paso) * 2);
+  background-position:
+    0 0,
+    calc(var(--rejilla-paso) / 2) 0,
+    0 1px,
+    calc(var(--rejilla-paso) / 2) 1px;
+}
+
+.aparato-led {
+  position: absolute;
+  /* Descentrado a propósito, no es un resto del centrado: va por encima de la
+     mitad de la banda, con la mitad de aire arriba que abajo. Más alto que
+     esto y el casquillo deja de apoyarse en el bisel para montarse en el
+     canto, que es de lo que venimos. */
+  inset-block-start: calc(var(--bisel) * 0.44);
+  inset-inline-start: 50%;
+  margin: calc(var(--led) / -2);
+  inline-size: var(--led);
+  block-size: var(--led);
+  border-radius: 50%;
+  /* Apagado no es un agujero: es una cápsula de plástico traslúcido que recoge
+     la luz de la habitación. La cúpula se aclara arriba, el cuerpo queda en
+     medio y el fondo de la cápsula oscurece; ese recorrido es lo que le da
+     volumen. Pintado de un solo gris oscuro se leía como una mancha. */
+  background-image: radial-gradient(
+    circle at 50% 28%,
+    var(--gris-carcasa-filo) 0 16%,
+    var(--gris-bisel) 66%,
+    var(--gris-vineta) 100%
+  );
+  box-shadow:
+    inset 0 0.0625rem 0.125rem -0.0625rem var(--relieve-sombra),
+    inset 0 -0.0625rem 0.125rem var(--relieve-luz),
+    0 0 0 max(1px, calc(var(--led) * 0.16)) var(--gris-bisel),
+    0 0.125rem 0.1875rem var(--gris-vineta);
+}
+
+/* La emisión vive en su propia capa y en reposo está a cero: lo que se ve
+   apagado es la cápsula, no esto. Encenderlo o hacerlo parpadear es mover esta
+   opacidad, que además es lo único animable aquí -un box-shadow creciendo
+   repinta-.
+   El halo está calibrado contra la banda superior, que es estrecha: apenas
+   llega a un diámetro por fuera de la cápsula. Venía de -160%, medido para
+   derramar dentro de una barbilla de 80px; en una banda de 28px eso se salía
+   por el canto y se metía en el cristal.
+   El z-index está para cuando lo enciendan: sin él el reflejo especular, que
+   va en ::after y por tanto se pinta después, aparece como una mota oscura
+   encima del fósforo. */
+.aparato-led::before {
+  content: "";
+  position: absolute;
+  inset: -110%;
+  z-index: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background-image: radial-gradient(
+    circle,
+    var(--fosforo) 0 8%,
+    var(--fosforo-halo) 18%,
+    transparent 62%
+  );
+}
+
+/* El reflejo especular de la cúpula. Va con el gris apagado y no con el filo
+   de la carcasa: sobre plástico oscuro el filo no llegaba a verse, y este es
+   justo el papel que tiene asignado -trazo no textual-.
+   Redondo y no ovalado: a 13px la diferencia no se apreciaba, pero la cápsula
+   es una semiesfera y a este diámetro un reflejo achatado se le nota. */
+.aparato-led::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 17%;
+  inset-inline-start: 23%;
+  inline-size: 26%;
+  block-size: 26%;
+  border-radius: 50%;
+  background-color: var(--fosforo-apagado);
+  opacity: 0.45;
+}
