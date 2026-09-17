@@ -39,14 +39,20 @@ export function pathFor(locale: Locale, section?: Section): string {
   return section ? `/${locale}/${slugFor(locale, section)}` : `/${locale}`;
 }
 
-// TODO: las alternativas salen en rutas relativas mientras no haya dominio.
-// hreflang las quiere absolutas, así que al fijar el dominio toca añadir
-// metadataBase y el sitemap con las dos versiones de cada ruta.
+export const sitio = "https://enolmartin.dev";
+
+export function urlFor(locale: Locale, section?: Section): string {
+  return `${sitio}${pathFor(locale, section)}`;
+}
+
+// Absolutas y no relativas aunque metadataBase las resolvería: el sitemap las
+// necesita absolutas de todas formas, y con una sola forma de escribirlas no
+// hay dos sitios donde equivocarse.
 export function languageAlternates(section?: Section) {
   return {
-    es: pathFor("es", section),
-    en: pathFor("en", section),
+    es: urlFor("es", section),
+    en: urlFor("en", section),
     // Español por defecto, igual que el reparto de la raíz por Accept-Language.
-    "x-default": pathFor("es", section),
+    "x-default": urlFor("es", section),
   };
 }

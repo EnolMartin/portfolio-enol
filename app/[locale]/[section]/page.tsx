@@ -5,10 +5,10 @@ import {
   isLocale,
   languageAlternates,
   locales,
-  pathFor,
   sectionForSlug,
   sections,
   slugFor,
+  urlFor,
 } from "@/lib/routes";
 
 export function generateStaticParams() {
@@ -34,7 +34,7 @@ export async function generateMetadata({
     title: secciones[section].titulo,
     description: secciones[section].descripcion,
     alternates: {
-      canonical: pathFor(locale, section),
+      canonical: urlFor(locale, section),
       languages: languageAlternates(section),
     },
   };

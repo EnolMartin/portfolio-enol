@@ -8,6 +8,7 @@ import {
   locales,
   pathFor,
   sections,
+  urlFor,
 } from "@/lib/routes";
 
 export function generateStaticParams() {
@@ -24,11 +25,12 @@ export async function generateMetadata({
 
   const { portada } = await getDictionary(locale);
 
+  // Sin title: el default del layout ya es el de la portada, y repetirlo aquí
+  // lo pasaría por la plantilla y duplicaría el nombre.
   return {
-    title: portada.titulo,
     description: portada.descripcion,
     alternates: {
-      canonical: pathFor(locale),
+      canonical: urlFor(locale),
       languages: languageAlternates(),
     },
   };

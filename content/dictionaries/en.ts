@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { Dictionary } from "./es";
 
 export const en: Dictionary = {
@@ -12,25 +14,25 @@ export const en: Dictionary = {
     sobreMi: {
       nombre: "[[FALTA: Sobre mí en la navegación, en inglés]]",
       encabezado: "[[FALTA: encabezado de Sobre mí, en inglés]]",
-      titulo: "[[FALTA: title de Sobre mí, en inglés]]",
+      titulo: "[[FALTA: title de Sobre mí sin el sufijo, en inglés]]",
       descripcion: "[[FALTA: meta description de Sobre mí, en inglés]]",
     },
     proyectos: {
       nombre: "[[FALTA: Proyectos en la navegación, en inglés]]",
       encabezado: "[[FALTA: encabezado de Proyectos, en inglés]]",
-      titulo: "[[FALTA: title de Proyectos, en inglés]]",
+      titulo: "[[FALTA: title de Proyectos sin el sufijo, en inglés]]",
       descripcion: "[[FALTA: meta description de Proyectos, en inglés]]",
     },
     trayectoria: {
       nombre: "[[FALTA: Trayectoria en la navegación, en inglés]]",
       encabezado: "[[FALTA: encabezado de Trayectoria, en inglés]]",
-      titulo: "[[FALTA: title de Trayectoria, en inglés]]",
+      titulo: "[[FALTA: title de Trayectoria sin el sufijo, en inglés]]",
       descripcion: "[[FALTA: meta description de Trayectoria, en inglés]]",
     },
     contacto: {
       nombre: "[[FALTA: Contacto en la navegación, en inglés]]",
       encabezado: "[[FALTA: encabezado de Contacto, en inglés]]",
-      titulo: "[[FALTA: title de Contacto, en inglés]]",
+      titulo: "[[FALTA: title de Contacto sin el sufijo, en inglés]]",
       descripcion: "[[FALTA: meta description de Contacto, en inglés]]",
     },
   },

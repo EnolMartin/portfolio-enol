@@ -1,3 +1,7 @@
+// Rompe la compilación si un componente de cliente llega hasta aquí, en vez
+// de arrastrar los textos al bundle en silencio.
+import "server-only";
+
 import type { Dictionary } from "@/content/dictionaries/es";
 import type { Locale } from "./routes";
 
