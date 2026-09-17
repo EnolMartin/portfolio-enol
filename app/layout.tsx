@@ -5,11 +5,15 @@ import "./globals.css";
 // Peso estático en vez de la variable: el eje wght costaría el doble de bytes
 // y aquí nadie interpola peso, porque solo se animan transform y opacity.
 // El subset latin ya trae ñ, tildes, ¿ y ¡: latin-ext sobra y pesa.
+// Sin fallback métrico: next/font lo calcula contra Arial, que es proporcional
+// y gana siempre a la pila monoespaciada del token. El respaldo natural del
+// sistema ya avanza como Plex Mono, así que el ajuste solo hacía daño.
 const cuerpo = IBM_Plex_Mono({
   variable: "--fuente-cuerpo",
   subsets: ["latin"],
   weight: "400",
   display: "swap",
+  adjustFontFallback: false,
 });
 
 const titular = Archivo_Black({

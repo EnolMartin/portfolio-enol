@@ -16,20 +16,28 @@
      ámbar ni verde: eso convertiría el aparato en un terminal de texto. */
   --fosforo: #e8ece9;
   --fosforo-tenue: #b4bcb8;
-  --fosforo-apagado: #7d8581;
+  --fosforo-apagado: #9ca6a1;
   --fosforo-halo: rgb(224 240 232 / 0.22);
 
-  /* Contraste sobre --gris-tubo, estimado en limpio y con la trama encima
-     (scanlines al 35% sobre la mitad de las líneas, peor caso: el glifo cae
-     sobre la línea oscura y el fondo no). El par que manda es el segundo:
-       --fosforo          15.8:1  ->  10.6:1
-       --fosforo-tenue     9.7:1  ->   6.6:1
-       --fosforo-apagado   5.0:1  ->   3.5:1
-     Si la trama sube de opacidad, hay que revisar --fosforo-tenue antes que
-     ningún otro valor. */
+  /* Contraste sobre --gris-tubo, en limpio y con la trama y el grano encima.
+     La banda de scanline cubre la fila entera, glifo y fondo por igual: no
+     existe el caso de oscurecer solo el texto, así que el peor caso es la
+     fila oscura completa. El grano se lleva otro 3-4% y también cuenta.
+       --fosforo          15.8:1  ->  9.4:1
+       --fosforo-tenue     9.7:1  ->  5.9:1
+       --fosforo-apagado   7.5:1  ->  4.7:1
+     Estas cifras están calculadas, no medidas en pantalla. Las anteriores
+     también lo estaban y la medición en píxeles las desmintió por un factor
+     de 1.5, así que al tocar la trama toca volver a medir, no recalcular de
+     memoria. El que va justo es --fosforo-apagado: 4.7 sobre un mínimo
+     de 4.5. */
 
-  /* --fuente-* las inyecta next/font en el <html> y solo traen la familia y
-     su fallback métrico; la pila de respaldo real se decide aquí. */
+  /* --fuente-* las inyecta next/font en el <html>. El cuerpo va sin fallback
+     métrico automático a propósito: ese ajuste se calcula contra Arial, que
+     es proporcional y existe en todas partes, así que ganaba siempre a esta
+     pila y el texto se pintaba proporcional durante el swap, en una maqueta
+     medida en ch. Las monoespaciadas de sistema de aquí abajo avanzan como
+     Plex Mono, así que el ajuste no hace falta. */
   --tipo-cuerpo: var(--fuente-cuerpo), ui-monospace, SFMono-Regular, Menlo,
     Consolas, monospace;
   --tipo-titular: var(--fuente-titular), system-ui, "Helvetica Neue", Arial,
@@ -80,11 +88,12 @@
   --estado-subrayado-grosor: 0.1875rem;
   --estado-subrayado-aire: 0.25em;
 
-  /* El bloque de contraste de más arriba da por ciertos exactamente estos dos
-     valores: media línea oscura por periodo, al 35%. Si se tocan, los ratios
-     anotados dejan de valer y hay que recalcularlos. */
+  /* Bajada de 0.35 a 0.22: a 0.35 el texto tenue se quedaba en 4.4:1 medido
+     en pantalla y no pasaba AA. Es el mínimo sacrificio de trama que deja
+     pasar los tres grises; bajarla más aplana el tubo sin necesidad. El
+     bloque de contraste de más arriba da por cierto este valor. */
   --trama-paso: 3px;
-  --trama-opacidad: 0.35;
+  --trama-opacidad: 0.22;
   --trama-linea: rgb(0 0 0 / var(--trama-opacidad));
 
   /* La densidad del grano va cocida en el SVG de crt.css porque var() no entra
@@ -96,7 +105,7 @@
 
 @media (prefers-contrast: more) {
   :root {
-    --trama-opacidad: 0.2;
+    --trama-opacidad: 0.12;
     --grano-opacidad: 0.02;
   }
 }

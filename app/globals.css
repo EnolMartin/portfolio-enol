@@ -11,9 +11,13 @@
 
 /* El documento es la habitación, no el aparato: si el fondo se deja al
    navegador, la primera pintura es blanca y el arranque del tubo llega
-   tarde a taparla. */
-body {
+   tarde a taparla. Va en html y no en body porque el rebote de overscroll
+   de iOS pinta más allá del body y deja asomar el blanco. */
+html {
   background: var(--gris-habitacion);
+}
+
+body {
   color: var(--fosforo);
   font-family: var(--tipo-cuerpo);
   font-size: var(--tamano-cuerpo);
