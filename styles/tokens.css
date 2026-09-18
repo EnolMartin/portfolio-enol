@@ -4,13 +4,17 @@
      tinte y deja de leerse como gris. */
   --gris-vineta: #030304;
   --gris-habitacion: #0a0b0c;
-  /* El aparato se apoya en algo: la habitación aclarada y girada a cálido,
-     porque la fuente le da de lleno. Cuatro por canal de desviación y catorce
-     de claridad sobre la habitación: es el escalón el que dice que ahí hay un
-     suelo, sin dibujar ningún canto. A seis de claridad -que es donde estaba-
-     el plano no se distinguía de la pared y la escena se leía como negro con
-     viñeta. */
-  --gris-superficie: #181614;
+  /* La mesa donde se apoya el aparato. Es madera, así que va a marrón, y el
+     marrón se sale del margen que declara este archivo: la desviación es de
+     doce entre rojo y azul, tres veces el máximo de 3-4.
+     No es un descuido: el usuario autorizó expresamente salirse de la
+     disciplina para esto, después de ver que a cuatro de desviación el tablero
+     se leía como gris tibio y no como madera. Probado antes a ocho, que a este
+     nivel de claridad casi no se distinguía del gris. Si alguien lo devuelve
+     al margen del archivo, la mesa vuelve a ser gris.
+     La claridad -veinte por encima de la habitación- es la que hace de escalón
+     y dice que ahí hay un plano distinto, sin dibujar ningún canto. */
+  --gris-superficie: #1d1811;
   --gris-bisel: #232220;
   --gris-carcasa: #3a3936;
   --gris-carcasa-filo: #514f4a;
@@ -61,17 +65,14 @@
      estructura -corchetes, sangría, una regla-; aquí quedan los separadores
      y los trazos no textuales. */
   --fosforo-apagado: #9ca6a1;
-  /* Lo que el tubo derrama fuera del cristal es fósforo también, así que va
-     con su familia y no con los grises: es lo único de la escena que se apaga
-     cuando se apaga la pantalla. Los dos llevan el color de --fosforo y no uno
-     propio, porque un tubo tiene un fósforo y no dos: con cromaticidad aparte,
-     mover el tono del texto dejaría la emisión atrás.
-     Lo que cambia entre ellos es el alcance: el halo moja el bisel, el derrame
-     llega a la habitación. El derrame estaba en 0.05, calibrado cuando el
-     aparato ocupaba el encuadre entero y caía casi todo sobre el propio bisel;
-     con el aparato al 85% tiene que cruzar el margen y a esa alfa no llegaba. */
+  /* El halo del LED encendido es fósforo derramándose fuera del cristal, así
+     que va con su familia y no con los grises. Lleva el color de --fosforo y no
+     uno propio, porque un tubo tiene un fósforo y no dos: con cromaticidad
+     aparte, mover el tono del texto dejaría la emisión atrás.
+     Tuvo pareja, --fosforo-derrame, que era el mismo fósforo con menos alfa
+     para la luz que llegaba desde el cristal hasta la mesa. Ese charco se
+     retiró de la escena y el token se ha ido con él. */
   --fosforo-halo: rgb(232 236 233 / 0.22);
-  --fosforo-derrame: rgb(232 236 233 / 0.12);
 
   /* Contraste sobre --gris-tubo, en limpio y con la trama y el grano encima.
      La banda de scanline cubre la fila entera, glifo y fondo por igual: no

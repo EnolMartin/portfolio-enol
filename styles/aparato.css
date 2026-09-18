@@ -13,9 +13,9 @@
   grid-template: 100% / 100%;
   place-items: center;
   /* La habitación es lo que se ve por el hueco, y lo que cae fuera se corta
-     aquí. Sin esto, las capas decorativas que se salen a propósito -la mesa,
-     que se extiende más allá del encuadre, y el charco del derrame- alargaban
-     el documento y la página scrolleaba: 345px de más en vertical y 55 en
+     aquí. Sin esto, las capas decorativas que se salen a propósito -la mesa se
+     extiende una ventana entera por debajo y por los lados- alargan el
+     documento y la página scrollea. Ya pasó: 345px de más en vertical y 55 en
      horizontal, medidos. No es un parche sobre el scroll: es que el borde del
      encuadre es el borde de la escena.
      Va clip y no hidden a propósito: hidden crearía un contenedor de scroll
@@ -172,6 +172,14 @@
   /* El cristal recorta lo que se salga; el scroll del contenido llega en su
      propia tarea y se monta dentro de este hueco, no en la página. */
   overflow: clip;
+  /* Aquí es donde se nota que el tubo está apagado, y en ningún otro sitio: la
+     escena ya no depende del estado de la pantalla desde que se quitó el
+     charco frío de la mesa, y así debe ser, porque a la habitación la alumbra
+     una lámpara que no se entera de si el aparato está encendido.
+     El punto de entrada del apagado es este hueco: una capa por encima del
+     cristal en --gris-tubo-apagado, con la opacidad a 1 apagado y a 0 vivo. Va
+     como elemento y no como pseudo porque ::before y ::after están ocupados
+     por la trama y el grano de .crt-superficie. Lo monta 3.3, aquí no. */
   /* De fuera a dentro: el filo iluminado del labio inferior del hueco, el
      canto de la junta y la pared de arriba proyectando sobre el tubo. */
   box-shadow:
@@ -365,45 +373,6 @@
   opacity: 0.45;
 }
 
-/* El derrame del tubo, y la única pieza de la escena que depende de que la
-   pantalla esté encendida.
-   La luz sale del cristal hacia delante, así que solo tiene delante y debajo
-   algo que iluminar: el charco cae sobre la superficie desde el canto inferior
-   del aparato. Aquí hubo una sombra exterior rodeando la caja del cristal, y
-   estaba mal de concepto y no de intensidad: emitía por los cuatro lados por
-   igual, se leía como un halo blanco alrededor de la carcasa y el aparato
-   parecía levitar. Bajarle la alfa lo hacía menos visible, no menos falso.
-   Este charco es frío y sale de debajo del aparato; el de la escena es cálido
-   y viene de la izquierda; la sombra proyectada va a la derecha. Tres cosas
-   sobre el mismo plano, cada una con su sitio.
-   El elemento sigue siendo la caja del cristal -de ahí cuelgan las medidas- y
-   lo que se pinta es su ::after, descolgado hasta el canto inferior de la
-   carcasa. La puerta para 3.3 y 3.4 sigue siendo la opacidad de esta capa y
-   nada más: vale 1 con el tubo encendido y 0 con la pantalla apagada, sin
-   tocar ningún color.
-   El alcance corto que mojaba el bisel se ha ido con el resto: era la misma
-   emisión omnidireccional, y encima aplanaba las cuatro caras del bisel, que
-   son de la carcasa y no del tubo. */
-.aparato-derrame {
-  position: absolute;
-  inset: var(--bisel) var(--bisel) var(--bisel-inferior);
-  pointer-events: none;
-  opacity: 1;
-}
-
-.aparato-derrame::after {
-  content: "";
-  position: absolute;
-  inset-block-start: calc(100% + var(--bisel-inferior));
-  inset-inline: -16%;
-  block-size: 62%;
-  background-image: radial-gradient(
-    58% 100% at 50% 0%,
-    var(--fosforo-derrame),
-    transparent 74%
-  );
-}
-
 /* La mesa, en vista frontal: una franja en primer plano con su canto.
    Va colgada del aparato y no del encuadre, y ese es el truco de toda la
    pieza: el canto tiene que pasar siempre por detrás de la base del aparato, y
@@ -435,11 +404,65 @@
   background-color: var(--gris-superficie);
   background-image:
     linear-gradient(to right, var(--gris-bisel), transparent 62%),
-    radial-gradient(38% 160% at 8% 0%, var(--escena-luz), transparent 72%),
-    linear-gradient(to right, transparent 45%, var(--relieve-penumbra) 82%);
+    radial-gradient(38% 160% at 8% 0%, var(--escena-luz), transparent 72%);
   background-size:
     100% max(1px, 0.14vmin),
-    auto,
     auto;
   background-repeat: no-repeat;
 }
+
+/* La veta. Lo que la distingue de una textura es que corre a lo largo del
+   tablero, pero lo que la hace madera y no pana es que las líneas van a
+   distancias desiguales. Un periodo corto y limpio -probado con 7, 11 y 19
+   superpuestos- se lee como una trama de rayas por mucho que se desfasen entre
+   sí. Así que cada capa tiene un periodo largo, 53 y 71 píxeles, y dentro del
+   periodo las líneas caen donde caen: el dibujo tarda tanto en repetirse que
+   no se reconoce.
+   La tercera capa es corta y vive solo en la franja de arriba, porque el
+   tablero se ve casi de canto y hacia el fondo las vetas se juntan. Su alto
+   sale del aparato para que el escorzo aguante a cualquier tamaño.
+   Las líneas claras van con la luz de la lámpara y las oscuras con la
+   penumbra. La penumbra de la derecha se pinta aquí, por encima de la veta y
+   no en el tablero: dejándola debajo, las vetas claras seguían brillando en la
+   parte oscura de la mesa como si tuvieran luz propia. Es la misma madera
+   iluminada de un lado, y lo que no está iluminado no tiene veta que enseñar. */
+.aparato-mesa::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, transparent 45%, var(--relieve-penumbra) 82%),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 3px,
+      var(--relieve-penumbra) 5px,
+      transparent 8px 14px,
+      var(--escena-luz) 17px,
+      transparent 21px 30px,
+      var(--relieve-penumbra) 32px,
+      transparent 36px 53px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 9px,
+      var(--escena-luz) 13px,
+      transparent 18px 39px,
+      var(--relieve-penumbra) 42px,
+      transparent 47px 71px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 2px,
+      var(--relieve-penumbra) 4px,
+      transparent 6px 13px,
+      var(--escena-luz) 15px,
+      transparent 17px 21px
+    );
+  background-size:
+    auto,
+    auto,
+    auto,
+    100% calc(var(--bisel-inferior) * 1.6);
+  background-repeat: no-repeat, repeat, repeat, no-repeat;
+}
+

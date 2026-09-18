@@ -17,7 +17,6 @@ export function Carcasa({ children }: { children: ReactNode }) {
         </div>
         <div className="aparato-rejilla" aria-hidden="true" />
         <div className="aparato-led" aria-hidden="true" />
-        <div className="aparato-derrame" aria-hidden="true" />
       </div>
     </div>
   );
