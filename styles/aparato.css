@@ -12,39 +12,9 @@
      saliéndose de la ventana en cuanto el texto es largo. */
   grid-template: 100% / 100%;
   place-items: center;
-  /* La habitación es lo que se ve por el hueco, y lo que cae fuera se corta
-     aquí. Sin esto, las capas decorativas que se salen a propósito -la mesa se
-     extiende una ventana entera por debajo y por los lados- alargan el
-     documento y la página scrollea. Ya pasó: 345px de más en vertical y 55 en
-     horizontal, medidos. No es un parche sobre el scroll: es que el borde del
-     encuadre es el borde de la escena.
-     Va clip y no hidden a propósito: hidden crearía un contenedor de scroll
-     que el navegador podría desplazar solo al enfocar algo, y el scroll de
-     esta página no existe. El contenido enfocable vive dentro del cristal, que
-     cabe entero aquí dentro. */
-  overflow: clip;
-  /* El contexto de apilado lo necesita la mesa, que se pinta con z-index
-     negativo: sin él iría por detrás del fondo del encuadre y no se vería. */
-  isolation: isolate;
   /* Lo que se ve alrededor es la habitación asomando. En vertical se reduce
      casi a nada. */
   padding: clamp(0.75rem, 3.5vmin, 3rem);
-
-  /* La habitación, de fuera a dentro del apilado: la fuente cálida entrando
-     por fuera de plano, la viñeta que cierra las esquinas y la superficie
-     donde se apoya el aparato.
-     Aquí queda solo lo que está detrás: el fondo de la habitación, la fuente
-     entrando por la esquina y la viñeta. El plano donde se apoya el aparato ya
-     no se insinúa con un escalón de tono, lo dibuja la mesa, que es un
-     elemento y vive anclada al aparato.
-     La viñeta va la última y no llega a cerrar del todo. Llevada al negro puro
-     -que es lo ortodoxo, la viñeta es lente- se comía la habitación entera:
-     con el aparato al 92% lo que queda de escena es una banda estrecha, y una
-     viñeta fuerte sobre una banda estrecha no cierra el encuadre, lo borra. */
-  background-color: var(--gris-habitacion);
-  background-image:
-    radial-gradient(115% 105% at -8% -12%, var(--escena-luz), transparent 88%),
-    radial-gradient(108% 100% at 50% 46%, transparent 52%, var(--gris-vineta) 190%);
 }
 
 /* El grosor del bisel es la medida de la que cuelga todo lo demás: tornillos,
@@ -84,7 +54,6 @@
   display: flex;
   flex-direction: column;
   aspect-ratio: 16 / 10;
-  inline-size: 92%;
   border-radius: var(--radio);
   /* El bisel tiene cuatro caras y la luz viene de arriba y un poco de la
      izquierda, así que ninguna refleja igual: la de arriba se vuelve hacia la
@@ -102,7 +71,7 @@
     linear-gradient(to bottom, var(--gris-carcasa-filo), transparent),
     linear-gradient(to top, var(--gris-bisel), transparent),
     linear-gradient(to right, var(--relieve-luz), transparent),
-    linear-gradient(to left, var(--relieve-penumbra), transparent);
+    linear-gradient(to left, var(--relieve-mancha), transparent);
   background-size:
     100% var(--bisel),
     100% var(--bisel-inferior),
@@ -110,38 +79,32 @@
     var(--bisel) 100%;
   background-position: top, bottom, left, right;
   background-repeat: no-repeat;
-  /* Los dos filos son de la carcasa; las dos sombras son de la escena. Van
-     juntas porque son el mismo sólido bajo la misma luz: la de contacto es
-     corta y pegada al canto, y la proyectada sale hacia abajo y a la derecha
-     porque la fuente está arriba a la izquierda. Antes había aquí una sola
-     sombra centrada, que con una fuente en una esquina no significa nada. */
   box-shadow:
     inset 0 0.0625rem 0 var(--relieve-luz),
     inset 0 -0.0625rem 0 var(--relieve-sombra),
-    0 0.25rem 0.625rem -0.1875rem var(--gris-vineta),
-    0.875rem 1.75rem 3rem -0.75rem var(--gris-vineta);
+    0 1.25rem 2.5rem var(--gris-vineta);
 }
 
-/* Por defecto manda el ancho; en cuanto la ventana es al menos tan apaisada
-   como el aparato, manda el alto y el ancho vuelve a automático.
-   El ancho tiene que volver a auto, y no es un detalle: solo se puede fijar el
-   eje que limita, porque la proporción deja de intervenir en cuanto los dos
-   ejes están definidos. Esto estaba escrito con dos media queries opuestas, y
-   en una ventana de 16:10 clavado -la proporción del propio aparato, o sea un
-   portátil cualquiera- las dos coincidían, se fijaban los dos ejes y el
-   aparato salía a 1.645 en vez de a 1.6. Se veía en la medición, no a ojo.
-   El 92% es lo que deja sitio a la habitación: al 100% una ventana de 16:10 se
-   traga el aparato entero y la escena se queda en el borde del padding. */
+/* Solo se fija el eje que limita y el otro sale de la proporción. Dando los
+   dos a la vez -alto al 100% y ancho al 100% como máximo- la proporción se
+   ignora, porque solo interviene cuando uno de los dos ejes es automático, y
+   el aparato se estira hasta llenar la ventana. Los máximos tampoco valen:
+   no se transfieren de un eje al otro contra una medida ya definida. */
 @media (min-aspect-ratio: 16 / 10) {
   .aparato {
-    inline-size: auto;
-    block-size: 92%;
+    block-size: 100%;
   }
 }
 
-/* La luz de la habitación no cae plana sobre los planos grandes: son claros y
-   penumbras anchos y sin borde, no suciedad. El estado acordado es "casi
-   nuevo" y ensuciar un gris se lleva por delante la lectura del texto.
+@media (max-aspect-ratio: 16 / 10) {
+  .aparato {
+    inline-size: 100%;
+  }
+}
+
+/* La luz de la habitación no cae plana sobre los planos grandes. Son manchas
+   anchas y sin borde, no suciedad: el estado acordado es "casi nuevo" y
+   ensuciar un gris se lleva por delante la lectura del texto.
    Aquí hubo un mosaico de ruido y está retirado: daba variación, pero uniforme
    y por toda la pieza, y una rugosidad igual en las cuatro bandas borra
    justamente los planos que las distinguen. El volumen lo tiene que dar la
@@ -154,9 +117,9 @@
   pointer-events: none;
   background-image:
     radial-gradient(70% 50% at 14% 4%, var(--relieve-luz), transparent 72%),
-    radial-gradient(45% 30% at 88% 10%, var(--relieve-penumbra), transparent 70%),
+    radial-gradient(45% 30% at 88% 10%, var(--relieve-mancha), transparent 70%),
     radial-gradient(38% 60% at 3% 74%, var(--relieve-luz), transparent 68%),
-    radial-gradient(60% 45% at 74% 98%, var(--relieve-penumbra), transparent 72%);
+    radial-gradient(60% 45% at 74% 98%, var(--relieve-mancha), transparent 72%);
 }
 
 /* El bisel es el margen del cristal y no el relleno de la carcasa: con
@@ -172,14 +135,6 @@
   /* El cristal recorta lo que se salga; el scroll del contenido llega en su
      propia tarea y se monta dentro de este hueco, no en la página. */
   overflow: clip;
-  /* Aquí es donde se nota que el tubo está apagado, y en ningún otro sitio: la
-     escena ya no depende del estado de la pantalla desde que se quitó el
-     charco frío de la mesa, y así debe ser, porque a la habitación la alumbra
-     una lámpara que no se entera de si el aparato está encendido.
-     El punto de entrada del apagado es este hueco: una capa por encima del
-     cristal en --gris-tubo-apagado, con la opacidad a 1 apagado y a 0 vivo. Va
-     como elemento y no como pseudo porque ::before y ::after están ocupados
-     por la trama y el grano de .crt-superficie. Lo monta 3.3, aquí no. */
   /* De fuera a dentro: el filo iluminado del labio inferior del hueco, el
      canto de la junta y la pared de arriba proyectando sobre el tubo. */
   box-shadow:
@@ -372,97 +327,3 @@
   background-color: var(--fosforo-apagado);
   opacity: 0.45;
 }
-
-/* La mesa, en vista frontal: una franja en primer plano con su canto.
-   Va colgada del aparato y no del encuadre, y ese es el truco de toda la
-   pieza: el canto tiene que pasar siempre por detrás de la base del aparato, y
-   esa base se mueve con la proporción de la ventana. Colgada del encuadre
-   habría que deducirla del margen y del tope del 92%, y en cuanto la cuenta no
-   cuadra el aparato flota. Colgada del aparato, el canto queda a una fracción
-   de su altura por encima de la base y cuadra en cualquier ventana sin
-   calcular nada.
-   Se extiende contra la ventana y no contra el aparato: en vertical el aparato
-   es pequeño y la habitación grande, y midiendo contra él la mesa se quedaba
-   corta y asomaba el fondo por debajo. La recorta el encuadre.
-   Que el elemento crezca con la ventana tiene una consecuencia que hay que
-   tener presente al tocar los degradados: sus porcentajes se miden sobre el
-   elemento, no sobre lo que se ve. Por eso el charco de la lámpara se ancla
-   al 8% -fuera de plano por la izquierda, que es donde está la lámpara- y lo
-   que entra en cuadro es su caída, que sale en la misma proporción lo mismo en
-   una ventana de móvil que en una ultrapanorámica.
-   El z-index negativo la pone por detrás del fondo de la carcasa, y por tanto
-   por detrás de las dos sombras del aparato, que son las que la apoyan encima.
-   El canto se apaga hacia la derecha: es el mismo motivo por el que el tablero
-   se oscurece hacia allí y por el que la sombra cae a ese lado. La lámpara
-   está a la izquierda y desde ahí se explica todo lo demás. */
-.aparato-mesa {
-  position: absolute;
-  z-index: -1;
-  inset-block-start: 86%;
-  inset-block-end: -100dvh;
-  inset-inline: -50dvw;
-  background-color: var(--gris-superficie);
-  background-image:
-    linear-gradient(to right, var(--gris-bisel), transparent 62%),
-    radial-gradient(38% 160% at 8% 0%, var(--escena-luz), transparent 72%);
-  background-size:
-    100% max(1px, 0.14vmin),
-    auto;
-  background-repeat: no-repeat;
-}
-
-/* La veta. Lo que la distingue de una textura es que corre a lo largo del
-   tablero, pero lo que la hace madera y no pana es que las líneas van a
-   distancias desiguales. Un periodo corto y limpio -probado con 7, 11 y 19
-   superpuestos- se lee como una trama de rayas por mucho que se desfasen entre
-   sí. Así que cada capa tiene un periodo largo, 53 y 71 píxeles, y dentro del
-   periodo las líneas caen donde caen: el dibujo tarda tanto en repetirse que
-   no se reconoce.
-   La tercera capa es corta y vive solo en la franja de arriba, porque el
-   tablero se ve casi de canto y hacia el fondo las vetas se juntan. Su alto
-   sale del aparato para que el escorzo aguante a cualquier tamaño.
-   Las líneas claras van con la luz de la lámpara y las oscuras con la
-   penumbra. La penumbra de la derecha se pinta aquí, por encima de la veta y
-   no en el tablero: dejándola debajo, las vetas claras seguían brillando en la
-   parte oscura de la mesa como si tuvieran luz propia. Es la misma madera
-   iluminada de un lado, y lo que no está iluminado no tiene veta que enseñar. */
-.aparato-mesa::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(to right, transparent 45%, var(--relieve-penumbra) 82%),
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0 3px,
-      var(--relieve-penumbra) 5px,
-      transparent 8px 14px,
-      var(--escena-luz) 17px,
-      transparent 21px 30px,
-      var(--relieve-penumbra) 32px,
-      transparent 36px 53px
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0 9px,
-      var(--escena-luz) 13px,
-      transparent 18px 39px,
-      var(--relieve-penumbra) 42px,
-      transparent 47px 71px
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0 2px,
-      var(--relieve-penumbra) 4px,
-      transparent 6px 13px,
-      var(--escena-luz) 15px,
-      transparent 17px 21px
-    );
-  background-size:
-    auto,
-    auto,
-    auto,
-    100% calc(var(--bisel-inferior) * 1.6);
-  background-repeat: no-repeat, repeat, repeat, no-repeat;
-}
-

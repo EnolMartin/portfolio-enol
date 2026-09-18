@@ -7,7 +7,6 @@ export function Carcasa({ children }: { children: ReactNode }) {
   return (
     <div className="aparato-encuadre">
       <div className="aparato">
-        <div className="aparato-mesa" aria-hidden="true" />
         <div className="aparato-pantalla crt-superficie">{children}</div>
         <div className="aparato-tornillos" aria-hidden="true">
           <span />

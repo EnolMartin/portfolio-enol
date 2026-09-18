@@ -4,37 +4,12 @@
      tinte y deja de leerse como gris. */
   --gris-vineta: #030304;
   --gris-habitacion: #0a0b0c;
-  /* La mesa donde se apoya el aparato. Es madera, así que va a marrón, y el
-     marrón se sale del margen que declara este archivo: la desviación es de
-     doce entre rojo y azul, tres veces el máximo de 3-4.
-     No es un descuido: el usuario autorizó expresamente salirse de la
-     disciplina para esto, después de ver que a cuatro de desviación el tablero
-     se leía como gris tibio y no como madera. Probado antes a ocho, que a este
-     nivel de claridad casi no se distinguía del gris. Si alguien lo devuelve
-     al margen del archivo, la mesa vuelve a ser gris.
-     La claridad -veinte por encima de la habitación- es la que hace de escalón
-     y dice que ahí hay un plano distinto, sin dibujar ningún canto. */
-  --gris-superficie: #1d1811;
   --gris-bisel: #232220;
   --gris-carcasa: #3a3936;
   --gris-carcasa-filo: #514f4a;
 
   --gris-tubo-apagado: #171a18;
   --gris-tubo: #0f1211;
-
-  /* La escena tiene una única fuente, fuera de plano por la esquina superior
-     izquierda. De ahí salen también las cuatro caras del bisel, el brillo de
-     los tornillos y el reflejo del LED, así que mover esta luz obliga a
-     rehacer aquello: no es un degradado decorativo, es de dónde viene la luz.
-     Es la única concesión de color de la web junto a la desviación cálido/frío
-     de los grises. La alfa va baja a propósito -subirla convierte el portfolio
-     en sepia- y el tono, alto: a 0.06 solo entra un 6% de la diferencia entre
-     canales del propio color, y la habitación ya tira a fría, así que un crema
-     suave se componía casi neutro y la única luz de la escena no llegaba a
-     leerse como cálida. Con este ámbar la esquina queda tres por encima en
-     rojo que en azul, el mismo margen que los grises, y sin subir un punto de
-     claridad. */
-  --escena-luz: rgb(255 230 172 / 0.06);
 
   /* La carcasa es un sólido, no un plano: sin un modelo de luz, el bisel, los
      tornillos y el casquillo del LED se quedan en siluetas planas. Van en alfa
@@ -43,14 +18,11 @@
      habría que duplicar cada valor por fondo.
      La luz cae desde arriba, así que el realce va en el filo inferior de un
      hueco y en el superior de un saliente. Invertirlo hunde lo que sobresale.
-     El realce no es blanco: es la fuente reflejada, y la fuente es cálida. En
-     blanco puro cada capa de luz desteñía el gris de la carcasa justo donde
-     más se mira, que son los filos.
-     La penumbra no es la sombra a menos alfa: la oclusión tiene borde duro y
-     la penumbra no, y compartiendo token siempre quedaba mal una de las dos. */
-  --relieve-luz: rgb(255 248 240 / 0.06);
+     La mancha no es la sombra a menos alfa: la oclusión tiene borde duro y la
+     mancha no, y compartiendo token siempre quedaba mal una de las dos. */
+  --relieve-luz: rgb(255 255 255 / 0.06);
   --relieve-sombra: rgb(0 0 0 / 0.5);
-  --relieve-penumbra: rgb(0 0 0 / 0.13);
+  --relieve-mancha: rgb(0 0 0 / 0.13);
 
   /* El fósforo no llega a blanco puro: #fff delata pantalla moderna.
      El carácter es P4, el blanco-gris de una tele en blanco y negro, no
@@ -65,14 +37,7 @@
      estructura -corchetes, sangría, una regla-; aquí quedan los separadores
      y los trazos no textuales. */
   --fosforo-apagado: #9ca6a1;
-  /* El halo del LED encendido es fósforo derramándose fuera del cristal, así
-     que va con su familia y no con los grises. Lleva el color de --fosforo y no
-     uno propio, porque un tubo tiene un fósforo y no dos: con cromaticidad
-     aparte, mover el tono del texto dejaría la emisión atrás.
-     Tuvo pareja, --fosforo-derrame, que era el mismo fósforo con menos alfa
-     para la luz que llegaba desde el cristal hasta la mesa. Ese charco se
-     retiró de la escena y el token se ha ido con él. */
-  --fosforo-halo: rgb(232 236 233 / 0.22);
+  --fosforo-halo: rgb(224 240 232 / 0.22);
 
   /* Contraste sobre --gris-tubo, en limpio y con la trama y el grano encima.
      La banda de scanline cubre la fila entera, glifo y fondo por igual: no
